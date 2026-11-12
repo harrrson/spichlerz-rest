@@ -1,0 +1,5 @@
+config.toml
+build/
+CMakeUserPresets.json
+.cache
+docs

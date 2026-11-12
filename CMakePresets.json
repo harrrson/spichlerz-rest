@@ -1,0 +1,143 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "gcc",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_CXX_COMPILER": "g++" }
+        },
+        {
+            "name": "clang",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_CXX_COMPILER": "clang++" }
+        },
+        {
+            "name": "debug",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+        },
+        {
+            "name": "release-type",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+        },
+        {
+            "name": "asan-flags",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=undefined", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined" }
+        },
+        {
+            "name": "tsan-flags",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=thread", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread" }
+        },
+        {
+            "name": "ci",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"}
+        },
+        {
+            "name": "dev",
+            "inherits": ["base", "gcc", "debug"]
+        },
+        {
+            "name": "dev-clang",
+            "inherits": ["base", "clang", "debug"]
+        },
+        {
+            "name": "asan",
+            "inherits": ["base", "gcc", "debug", "asan-flags"]
+        },
+        {
+            "name": "tsan",
+            "inherits": ["base", "gcc", "debug", "tsan-flags"]
+        },
+        {
+            "name": "release",
+            "inherits": ["base", "gcc", "release-type"]
+        },
+        {
+            "name": "ci-gcc12",
+            "inherits": ["base", "debug", "ci"],
+            "cacheVariables": { "CMAKE_CXX_COMPILER": "g++-12" }
+        }
+    ],
+    "buildPresets": [
+        { "name": "dev", "configurePreset": "dev" },
+        { "name": "dev-clang", "configurePreset": "dev-clang" },
+        { "name": "asan", "configurePreset": "asan" },
+        { "name": "tsan", "configurePreset": "tsan" },
+        { "name": "release", "configurePreset": "release" },
+        { "name": "ci-gcc12", "configurePreset": "ci-gcc12" }
+    ],
+    "testPresets": [
+        {
+            "name": "test-base",
+            "hidden": true,
+            "output": { "outputOnFailure": true },
+            "execution": { "noTestsAction": "error" }
+        },
+        { "name": "dev", "inherits": "test-base", "configurePreset": "dev" },
+        { "name": "dev-clang", "inherits": "test-base", "configurePreset": "dev-clang" },
+        { "name": "asan", "inherits": "test-base", "configurePreset": "asan" },
+        { "name": "tsan", "inherits": "test-base", "configurePreset": "tsan" },
+        { "name": "release", "inherits": "test-base", "configurePreset": "release" },
+        { "name": "ci-gcc12", "inherits": "test-base", "configurePreset": "ci-gcc12" }
+    ],
+    "workflowPresets": [
+        {
+        "name": "dev",
+        "steps": [
+            { "type": "configure", "name": "dev" },
+            { "type": "build",     "name": "dev" },
+            { "type": "test",      "name": "dev" }
+        ]
+        },
+        {
+        "name": "dev-clang",
+        "steps": [
+            { "type": "configure", "name": "dev-clang" },
+            { "type": "build",     "name": "dev-clang" },
+            { "type": "test",      "name": "dev-clang" }
+        ]
+        },
+        {
+        "name": "asan",
+        "steps": [
+            { "type": "configure", "name": "asan" },
+            { "type": "build",     "name": "asan" },
+            { "type": "test",      "name": "asan" }
+        ]
+        },
+        {
+        "name": "tsan",
+        "steps": [
+            { "type": "configure", "name": "tsan" },
+            { "type": "build",     "name": "tsan" },
+            { "type": "test",      "name": "tsan" }
+        ]
+        },
+        {
+        "name": "release",
+        "steps": [
+            { "type": "configure", "name": "release" },
+            { "type": "build",     "name": "release" },
+            { "type": "test",      "name": "release" }
+        ]
+        },
+        {
+        "name": "ci-gcc12",
+        "steps": [
+            { "type": "configure", "name": "ci-gcc12" },
+            { "type": "build",     "name": "ci-gcc12" },
+            { "type": "test",      "name": "ci-gcc12" }
+        ]
+        }
+    ]
+}
