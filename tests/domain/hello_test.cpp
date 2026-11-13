@@ -1,3 +1,5 @@
+#include <spz/domain/test.hpp>
+
 #include <gtest/gtest.h>
 
-TEST(HelloWorld, ShouldPassAddition) { EXPECT_EQ(2 + 2, 4); }
+TEST(Domain, ReturnsSpichlerz) { EXPECT_EQ(spz::domain::projectName(), "spichlerz"); }
