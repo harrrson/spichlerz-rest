@@ -1,0 +1,84 @@
+
+name: Spichlerz CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: ${{ matrix.preset }} workflow run
+    runs-on: ubuntu-24.04
+    container: debian:12
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: 
+          - preset: ci-gcc12
+            compiler: g++-12
+          - preset: ci-clang16
+            compiler: clang-16
+          - preset: asan
+            compiler: g++
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install apt packages
+        run: apt-get update && apt-get install -y --no-install-recommends cmake ninja-build git ca-certificates libgtest-dev ${{matrix.compiler}}
+
+      - name: Run preset
+        run: cmake --workflow --preset ${{matrix.preset}}
+
+  format:
+    name: clang-format check
+    runs-on: ubuntu-24.04
+    container: debian:12
+    timeout-minutes: 30
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install apt packages
+        run: apt-get update && apt-get install -y --no-install-recommends cmake ninja-build git ca-certificates clang-format-16 clang-16
+
+      - name: Configure build
+        run: cmake --preset ci-clang16 -DBUILD_TESTING=OFF
+
+      - name: Run format
+        run: cmake --build --preset ci-clang16 --target format-check
+
+  tidy:
+    name: clang-tidy check
+    runs-on: ubuntu-24.04
+    container: debian:12
+    timeout-minutes: 30
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install apt packages
+        run: apt-get update && apt-get install -y --no-install-recommends cmake ninja-build git ca-certificates clang-16 libgtest-dev python3-pip
+      
+      - name: Install tidy
+        run: pip install --break-system-packages clang-tidy==18.1.8
+
+      - name: Run tidy
+        run: cmake --workflow --preset tidy

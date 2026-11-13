@@ -18,6 +18,11 @@
             "cacheVariables": { "CMAKE_CXX_COMPILER": "clang++" }
         },
         {
+            "name": "clang16",
+            "hidden": true,
+            "cacheVariables": { "CMAKE_CXX_COMPILER": "clang++-16"}
+        },
+        {
             "name": "debug",
             "hidden": true,
             "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
@@ -68,8 +73,12 @@
             "cacheVariables": { "CMAKE_CXX_COMPILER": "g++-12" }
         },
         {
+            "name": "ci-clang16",
+            "inherits": ["base", "debug", "ci", "clang16"]
+        },
+        {
             "name": "tidy",
-            "inherits": ["base", "clang", "debug"],
+            "inherits": ["base", "clang16", "debug"],
             "cacheVariables": { "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*"  }
         }
     ],
@@ -80,6 +89,7 @@
         { "name": "tsan", "configurePreset": "tsan" },
         { "name": "release", "configurePreset": "release" },
         { "name": "ci-gcc12", "configurePreset": "ci-gcc12" },
+        { "name": "ci-clang16", "configurePreset": "ci-clang16" },
         { "name": "tidy", "configurePreset": "tidy" }
     ],
     "testPresets": [
@@ -95,6 +105,7 @@
         { "name": "tsan", "inherits": "test-base", "configurePreset": "tsan" },
         { "name": "release", "inherits": "test-base", "configurePreset": "release" },
         { "name": "ci-gcc12", "inherits": "test-base", "configurePreset": "ci-gcc12" },
+        { "name": "ci-clang16", "inherits": "test-base", "configurePreset": "ci-clang16" },
         { "name": "tidy", "inherits": "test-base", "configurePreset": "tidy" }
     ],
     "workflowPresets": [
@@ -144,6 +155,14 @@
             { "type": "configure", "name": "ci-gcc12" },
             { "type": "build",     "name": "ci-gcc12" },
             { "type": "test",      "name": "ci-gcc12" }
+        ]
+        },
+        {
+        "name": "ci-clang16",
+        "steps": [
+            { "type": "configure", "name": "ci-clang16" },
+            { "type": "build",     "name": "ci-clang16" },
+            { "type": "test",      "name": "ci-clang16" }
         ]
         },
         {

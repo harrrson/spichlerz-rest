@@ -1,4 +1,4 @@
-find_program(CLANG_FORMAT_EXE clang-format)
+find_program(CLANG_FORMAT_EXE NAMES clang-format-16 clang-format)
 
 if(CLANG_FORMAT_EXE)
     execute_process(COMMAND ${CLANG_FORMAT_EXE} --version OUTPUT_VARIABLE FORMAT_VERSION)
