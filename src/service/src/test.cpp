@@ -3,5 +3,5 @@
 #include <string_view>
 namespace spz::service
 {
-std::string_view projectName() { return "spichlerz"; }
+std::string_view projectName() { int BadName=1; return "spichlerz"; }
 } // namespace spz::service
