@@ -66,6 +66,11 @@
             "name": "ci-gcc12",
             "inherits": ["base", "debug", "ci"],
             "cacheVariables": { "CMAKE_CXX_COMPILER": "g++-12" }
+        },
+        {
+            "name": "tidy",
+            "inherits": ["base", "clang", "debug"],
+            "cacheVariables": { "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*"  }
         }
     ],
     "buildPresets": [
@@ -74,7 +79,8 @@
         { "name": "asan", "configurePreset": "asan" },
         { "name": "tsan", "configurePreset": "tsan" },
         { "name": "release", "configurePreset": "release" },
-        { "name": "ci-gcc12", "configurePreset": "ci-gcc12" }
+        { "name": "ci-gcc12", "configurePreset": "ci-gcc12" },
+        { "name": "tidy", "configurePreset": "tidy" }
     ],
     "testPresets": [
         {
@@ -88,7 +94,8 @@
         { "name": "asan", "inherits": "test-base", "configurePreset": "asan" },
         { "name": "tsan", "inherits": "test-base", "configurePreset": "tsan" },
         { "name": "release", "inherits": "test-base", "configurePreset": "release" },
-        { "name": "ci-gcc12", "inherits": "test-base", "configurePreset": "ci-gcc12" }
+        { "name": "ci-gcc12", "inherits": "test-base", "configurePreset": "ci-gcc12" },
+        { "name": "tidy", "inherits": "test-base", "configurePreset": "tidy" }
     ],
     "workflowPresets": [
         {
@@ -137,6 +144,13 @@
             { "type": "configure", "name": "ci-gcc12" },
             { "type": "build",     "name": "ci-gcc12" },
             { "type": "test",      "name": "ci-gcc12" }
+        ]
+        },
+        {
+        "name": "tidy",
+        "steps": [
+            { "type": "configure", "name": "tidy" },
+            { "type": "build",     "name": "tidy" }
         ]
         }
     ]

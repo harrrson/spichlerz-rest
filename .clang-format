@@ -1,0 +1,20 @@
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+BreakBeforeBraces: Allman
+ColumnLimit: 100
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: ^<spz/
+    Priority: 1
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: ^<[a-z_0-9]+>$
+    Priority: 3
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: .*
+    Priority: 2
+    SortPriority: 0
+    CaseSensitive: false
+IndentWidth: 4
+InsertNewlineAtEOF: true

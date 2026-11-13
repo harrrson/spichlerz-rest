@@ -1,0 +1,4 @@
+InheritParentConfig: true
+Checks: >
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -*-magic-numbers
